@@ -10,7 +10,7 @@ We start by enumerating the target to discover running services and open ports.
 nmap -sC -sV 10.49.187.90
 ```
 
-![Nmap Scan Result](assets/01-Reconnaissance-Enumeration/Nmap-scanning.png)
+![Nmap Scan Result](Assets/01-Reconnaissance-Enumeration/Nmap-scanning.png)
 
 **Nmap Results:**
 
@@ -27,7 +27,7 @@ Visiting the web server on `port 80` :
 http://10.49.187.90
 ```
 
-![Website Arrowverse](assets/01-Reconnaissance-and-Enumeration/WebPage.png)
+![Website Arrowverse](Assets/01-Reconnaissance-and-Enumeration/WebPage.png)
 
 * Website page displays an "ARROWVERSE" themed page describing Oliver Queen's backstory. There are no immediately interactive elements or obvious links, so we need to brute-force the directories.
 
@@ -37,7 +37,7 @@ We will use `gobuster` to find hidden directories :
 gobuster dir -u http://10.49.187.90/ --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
-![gobuster island](assets/01-Reconnaissance-and-Enumeration/gobuster-island.png)
+![gobuster island](Assets/01-Reconnaissance-and-Enumeration/gobuster-island.png)
 
 * The scan reveals a hidden directory :
 
@@ -51,8 +51,8 @@ Navigating to :
 http://10.49.187.90/island
 ```
 
-![Website island](assets/01-Reconnaissance-and-Enumeration/WebIsland.png)
-![soure page island](assets/01-Reconnaissance-and-Enumeration/Source-Page.png)
+![Website island](Assets/01-Reconnaissance-and-Enumeration/WebIsland.png)
+![soure page island](Assets/01-Reconnaissance-and-Enumeration/Source-Page.png)
 
 * We found out the Code Word by highlighting the `page text` or `viewing the page source`.
 
@@ -68,7 +68,7 @@ Continue our enumeration, we run another `gobuster` scan, this time targeting th
 gobuster dir -u http://10.49.187.90/island --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
-![gobuster 2100](assets/01-Reconnaissance-and-Enumeration/gobuster-2100.png)
+![gobuster 2100](Assets/01-Reconnaissance-and-Enumeration/gobuster-2100.png)
 
 * This exposes nested directories :
 
@@ -82,11 +82,11 @@ Navigating to :
 http://10.49.187.90/island/2100 -- (What is the Web Directory you found?)
 ```
 
-![Webiste 2100](assets/01-Reconnaissance-and-Enumeration/WebPage-2100.png)
+![Webiste 2100](Assets/01-Reconnaissance-and-Enumeration/WebPage-2100.png)
 
 * Shows a page containing an embedded YouTube video (which appears unavailable).
 
-![soure page 2100](assets/01-Reconnaissance-and-Enumeration/Source-Page-2100.png)
+![soure page 2100](Assets/01-Reconnaissance-and-Enumeration/Source-Page-2100.png)
 
 * Looking at the page source again reveals a files with a `.ticket extension`.
 
@@ -96,7 +96,7 @@ We run a final `gobuster` scan on the `/2100` directory, appending the `-x` flag
 gobuster dir -u http://10.49.187.90/island/2100 --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt -x .ticket
 ```
 
-![gobuster green arrow ticket](assets/01-Reconnaissance-and-Enumeration/gobuster-green_arrow.png)
+![gobuster green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/gobuster-green_arrow.png)
 
 * The scan successfully locates a file named:
 
@@ -110,7 +110,7 @@ Navigating to :
 http://10.49.187.90/island/2100/green_arrow.ticket
 ```
 
-![Website green arrow ticket](assets/01-Reconnaissance-and-Enumeration/WebPage-green-arrow.ticket.png)
+![Website green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/WebPage-green-arrow.ticket.png)
 
 * Opening this file in the browser reveals a token :
 
@@ -126,7 +126,7 @@ https://gchq.github.io/CyberChef/
 
 Use `FromBase58` to decode it.
 
-![Website CyberChef](assets/01-Reconnaissance-and-Enumeration/CyberChef.png)
+![Website CyberChef](Assets/01-Reconnaissance-and-Enumeration/CyberChef.png)
 
 * We uncover the password :
 
@@ -149,7 +149,7 @@ We use these to log into the FTP service running on port 21 :
 ftp 10.49.187.90
 ```
 
-![FTP Service](assets/02-FTP-and-Steganography/Ftp-service.png)
+![FTP Service](Assets/02-Ftp-Steganography/Ftp-service.png)
 
 * We have successfully logged in.
 
@@ -159,7 +159,7 @@ Once logged in, running :
 ls -al
 ```
 
-![check directory](assets/02-FTP-and-Steganography/ls-al.png)
+![check directory](Assets/02-Ftp-Steganography/ls-al.png)
 
 * We find 3 image files, download all of them :
 
@@ -169,7 +169,7 @@ ls -al
   get aa.jpg
   ```
 
-  ![download image](assets/02-FTP-and-Steganography/Download-Image.png)
+  ![download image](Assets/02-Ftp-Steganography/Download-Image.png)
 
 While navigating the FTP server, checking the parent directory :
 
@@ -180,7 +180,7 @@ cd ..
 ls -al
 ```
 
-![check parent directory](assets/02-FTP-and-Steganography/parent-directory.png)
+![check parent directory](Assets/02-Ftp-Steganography/parent-directory.png)
 
 * Reveals the home directories of two users :
 
@@ -193,9 +193,9 @@ ls -al
 
 Attempting to open the downloaded files locally yields mixed results :
 
-![image aa](assets/02-FTP-and-Steganography/aa.png)
-![image queen gambit](assets/02-FTP-and-Steganography/Queen's_Gambit.png)
-![image leave me alone](assets/02-FTP-and-Steganography/Leave_me_alone.png)
+![image aa](Assets/02-Ftp-Steganography/aa.png)
+![image queen gambit](Assets/02-Ftp-Steganography/Queen's_Gambit.png)
+![image leave me alone](Assets/02-Ftp-Steganography/Leave_me_alone.png)
 
 * `aa.jpg` and `Queen's_Gambit.png` open perfectly, but `Leave_me_alone.png` throws an `"Unsupported image format"` error.
 
@@ -205,7 +205,7 @@ Running `exiftool` on `Leave_me_alone.png` :
 exiftool Leave_me_alone.png
 ```
 
-![exiftool](assets/02-FTP-and-Steganography/exiftool-Leave_me_alone.png)
+![exiftool](Assets/02-Ftp-Steganography/exiftool-Leave_me_alone.png)
 
 * Result show :
 
@@ -219,19 +219,19 @@ This indicates the file's magic bytes (file signature) are likely corrupted. We 
 hexeditor Leave_me_alone.png
 ```
 
-![hexeditor](assets/02-FTP-and-Steganography/hexeditor-Leave_me_alone.png.png)
+![hexeditor](Assets/02-Ftp-Steganography/hexeditor-Leave_me_alone.png.png)
 
-![hexeditor error](assets/02-FTP-and-Steganography/hexaditor-leave_me_alone.png)
+![hexeditor error](Assets/02-Ftp-Steganography/hexaditor-leave_me_alone.png)
 
 * The first few bytes read `58 45 6F AE`, which is incorrect.
 
 We modify the incorrect bytes in the hex editor to the valid PNG signature `89 50 4E 47` and save the file :
 
-![hexeditor fixed](assets/02-FTP-and-Steganography/hexeditor-fixed-PNG-signature.png)
+![hexeditor fixed](Assets/02-Ftp-Steganography/hexeditor-fixed-PNG-signature.png)
 
 After change the bytes to the correct one. We open the `Leave_me_alone.png`.
 
-![fixed image](assets/02-FTP-and-Steganography/Leave_me_alone-fixed.png)
+![fixed image](Assets/02-Ftp-Steganography/Leave_me_alone-fixed.png)
 
 * The image now opens successfully, revealing an embedded word :
 
@@ -251,7 +251,7 @@ When prompted for a passphrase, we provide the word we extracted from the fixed 
 password
 ```
 
-![steghide](assets/02-FTP-and-Steganography/steghide-extract.png)
+![steghide](Assets/02-Ftp-Steganography/steghide-extract.png)
 
 * This successfully extracts a hidden ZIP archive named :
 
@@ -265,7 +265,7 @@ Unzipping `ss.zip` :
 unzip ss.zip
 ```
 
-![unzip ss.zip](assets/02-FTP-and-Steganography/ss.zip.png)
+![unzip ss.zip](Assets/02-Ftp-Steganography/ss.zip.png)
 
 * Reveal two files :
 
@@ -282,7 +282,7 @@ Then we use command `cat` for read information inside the 2 file we get :
 cat passwd.txt
 ```
 
-![cat passwd](assets/02-FTP-and-Steganography/cat-passwd.png)
+![cat passwd](Assets/02-Ftp-Steganography/cat-passwd.png)
 
 * `passwd.txt` contains some flavor text about the island
 
@@ -290,7 +290,7 @@ cat passwd.txt
 cat shado
 ```
 
-![cat shado](assets/02-FTP-and-Steganography/cat-shado.txt.png)
+![cat shado](Assets/02-Ftp-Steganography/cat-shado.txt.png)
 
 * `shado` reveals a string :
   
@@ -306,7 +306,7 @@ We now have a new password `M3tahuman` and we previously identified another user
 ssh slade@10.49.187.90
 ```
 
-![ssh slade](assets/03-Privilege-Escalation/SSh-access.png)
+![ssh slade](Assets/03-Privialge-Escalation/SSh-access.png)
 
 * Using `M3tahuman` as the password grants us access to the system as `slade`.
 
@@ -316,7 +316,7 @@ Once inside, we check the directory contents :
 ls -al
 ```
 
-![check directory](assets/03-Privilege-Escalation/Directory-lianyu.png)
+![check directory](Assets/03-Privialge-Escalation/Directory-lianyu.png)
 
 * We found `user.txt`.
 
@@ -326,7 +326,7 @@ Read `user.txt` :
 cat user.txt
 ```
 
-![cat user.txt](assets/03-Privilege-Escalation/Flag-user.png)
+![cat user.txt](Assets/03-Privialge-Escalation/Flag-user.png)
 
 * We found Flag user.txt :
 
@@ -342,7 +342,7 @@ Reading it :
 cat .Important
 ```
 
-![cat important](assets/03-Privilege-Escalation/cat-Important.png)
+![cat important](Assets/03-Privialge-Escalation/cat-Important.png)
 
 * The output reveals a hint : `"root Privileges ? try to find Secret_Mission"`.
 
@@ -352,7 +352,7 @@ To check for basic privilege escalation vectors, we look at the `sudo` permissio
 sudo -l
 ```
 
-![basic privilege](assets/03-Privilege-Escalation/sudo-l-lianyu.png)
+![basic privilege](Assets/03-Privialge-Escalation/sudo-l-lianyu.png)
 
 * The output reveals that `slade` is allowed to execute `/usr/bin/pkexec` as `root` without providing a password!
 
@@ -364,7 +364,7 @@ sudo pkexec /bin/sh
 
 Running `whoami` and `id` to confirms that we have successfully escalated our privileges to `root`.
 
-![sudo pkexec](assets/03-Privilege-Escalation/sudo-pkexec-lianyu.png)
+![sudo pkexec](Assets/03-Privialge-Escalation/sudo-pkexec-lianyu.png)
 
 Check directory :
 
@@ -372,7 +372,7 @@ Check directory :
 ls -al
 ```
 
-![check directory](assets/03-Privilege-Escalation/Directory-slade.png)
+![check directory](Assets/03-Privialge-Escalation/Directory-slade.png)
 
 * The output reveals `root.txt`.
 
@@ -382,7 +382,7 @@ Finally, we read the root flag located in the root directory :
 cat root.txt
 ```
 
-![cat root.txt](assets/03-Privilege-Escalation/Flag-root.png)
+![cat root.txt](Assets/03-Privialge-Escalation/Flag-root.png)
 
 * We found Flag root.txt :
 
