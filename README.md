@@ -27,7 +27,7 @@ Visiting the web server on `port 80` :
 http://10.49.131.252
 ```
 
-![Website Arrowverse](Assets/01-Reconnaissance-and-Enumeration/WebPage.png)
+![Website Arrowverse](Assets/01-Reconnaissance-Enumeration/WebPage.png)
 
 * Website page displays an "ARROWVERSE" themed page describing Oliver Queen's backstory. There are no immediately interactive elements or obvious links, so we need to brute-force the directories.
 
@@ -37,7 +37,7 @@ We will use `gobuster` to find hidden directories :
 gobuster dir -u http://10.49.131.252/ --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
-![gobuster island](Assets/01-Reconnaissance-and-Enumeration/gobuster-island.png)
+![gobuster island](Assets/01-Reconnaissance-Enumeration/gobuster-island.png)
 
 * The scan reveals a hidden directory :
 
@@ -51,8 +51,8 @@ Navigating to :
 http://10.49.131.252/island
 ```
 
-![Website island](Assets/01-Reconnaissance-and-Enumeration/WebIsland.png)
-![soure page island](Assets/01-Reconnaissance-and-Enumeration/Source-Page.png)
+![Website island](Assets/01-Reconnaissance-Enumeration/WebIsland.png)
+![soure page island](Assets/01-Reconnaissance-Enumeration/Source-Page.png)
 
 * We found out the Code Word by highlighting the `page text` or `viewing the page source`.
 
@@ -68,7 +68,7 @@ Continue our enumeration, we run another `gobuster` scan, this time targeting th
 gobuster dir -u http://10.49.131.252/island --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
-![gobuster 2100](Assets/01-Reconnaissance-and-Enumeration/gobuster-2100.png)
+![gobuster 2100](Assets/01-Reconnaissance-Enumeration/gobuster-2100.png)
 
 * This exposes nested directories :
 
@@ -82,11 +82,11 @@ Navigating to :
 http://10.49.131.252/island/2100 -- (What is the Web Directory you found?)
 ```
 
-![Webiste 2100](Assets/01-Reconnaissance-and-Enumeration/WebPage-2100.png)
+![Webiste 2100](Assets/01-Reconnaissance-Enumeration/WebPage-2100.png)
 
 * Shows a page containing an embedded YouTube video (which appears unavailable).
 
-![soure page 2100](Assets/01-Reconnaissance-and-Enumeration/Source-Page-2100.png)
+![soure page 2100](Assets/01-Reconnaissance-Enumeration/Source-Page-2100.png)
 
 * Looking at the page source again reveals a files with a `.ticket extension`.
 
@@ -96,7 +96,7 @@ We run a final `gobuster` scan on the `/2100` directory, appending the `-x` flag
 gobuster dir -u http://10.49.131.252/island/2100 --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt -x .ticket
 ```
 
-![gobuster green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/gobuster-green_arrow.png)
+![gobuster green arrow ticket](Assets/01-Reconnaissance-Enumeration/gobuster-green_arrow.png)
 
 * The scan successfully locates a file named:
 
@@ -110,7 +110,7 @@ Navigating to :
 http://10.49.131.252/island/2100/green_arrow.ticket
 ```
 
-![Website green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/WebPage-green-arrow.ticket.png)
+![Website green arrow ticket](Assets/01-Reconnaissance-Enumeration/WebPage-green-arrow.ticket.png)
 
 * Opening this file in the browser reveals a token :
 
@@ -126,7 +126,7 @@ https://gchq.github.io/CyberChef/
 
 Use `FromBase58` to decode it.
 
-![Website CyberChef](Assets/01-Reconnaissance-and-Enumeration/CyberChef.png)
+![Website CyberChef](Assets/01-Reconnaissance-Enumeration/CyberChef.png)
 
 * We uncover the password :
 
