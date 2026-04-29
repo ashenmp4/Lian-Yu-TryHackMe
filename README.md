@@ -7,7 +7,7 @@ We start by enumerating the target to discover running services and open ports.
 **Nmap Scan**
 
 ```bash
-nmap -sC -sV 10.49.187.90
+nmap -sC -sV 10.49.131.252
 ```
 
 ![Nmap Scan Result](Assets/01-Reconnaissance-Enumeration/Nmap-scanning.png)
@@ -24,7 +24,7 @@ nmap -sC -sV 10.49.187.90
 Visiting the web server on `port 80` :
 
 ```bash
-http://10.49.187.90
+http://10.49.131.252
 ```
 
 ![Website Arrowverse](Assets/01-Reconnaissance-and-Enumeration/WebPage.png)
@@ -34,7 +34,7 @@ http://10.49.187.90
 We will use `gobuster` to find hidden directories :
 
 ```bash
-gobuster dir -u http://10.49.187.90/ --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
+gobuster dir -u http://10.49.131.252/ --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
 ![gobuster island](Assets/01-Reconnaissance-and-Enumeration/gobuster-island.png)
@@ -48,7 +48,7 @@ gobuster dir -u http://10.49.187.90/ --wordlist /usr/share/dirbuster/wordlists/d
 Navigating to :
 
 ```bash
-http://10.49.187.90/island
+http://10.49.131.252/island
 ```
 
 ![Website island](Assets/01-Reconnaissance-and-Enumeration/WebIsland.png)
@@ -65,7 +65,7 @@ http://10.49.187.90/island
 Continue our enumeration, we run another `gobuster` scan, this time targeting the newly found `/island` directory.
 
 ```bash
-gobuster dir -u http://10.49.187.90/island --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
+gobuster dir -u http://10.49.131.252/island --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt
 ```
 
 ![gobuster 2100](Assets/01-Reconnaissance-and-Enumeration/gobuster-2100.png)
@@ -79,7 +79,7 @@ gobuster dir -u http://10.49.187.90/island --wordlist /usr/share/dirbuster/wordl
 Navigating to :
 
 ```bash
-http://10.49.187.90/island/2100 -- (What is the Web Directory you found?)
+http://10.49.131.252/island/2100 -- (What is the Web Directory you found?)
 ```
 
 ![Webiste 2100](Assets/01-Reconnaissance-and-Enumeration/WebPage-2100.png)
@@ -93,7 +93,7 @@ http://10.49.187.90/island/2100 -- (What is the Web Directory you found?)
 We run a final `gobuster` scan on the `/2100` directory, appending the `-x` flag to search for that specific extension.
 
 ```bash
-gobuster dir -u http://10.49.187.90/island/2100 --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt -x .ticket
+gobuster dir -u http://10.49.131.252/island/2100 --wordlist /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt -x .ticket
 ```
 
 ![gobuster green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/gobuster-green_arrow.png)
@@ -107,7 +107,7 @@ gobuster dir -u http://10.49.187.90/island/2100 --wordlist /usr/share/dirbuster/
 Navigating to :
 
 ```bash
-http://10.49.187.90/island/2100/green_arrow.ticket
+http://10.49.131.252/island/2100/green_arrow.ticket
 ```
 
 ![Website green arrow ticket](Assets/01-Reconnaissance-and-Enumeration/WebPage-green-arrow.ticket.png)
@@ -146,7 +146,7 @@ We now have a set of credentials:
 We use these to log into the FTP service running on port 21 :
 
 ```bash
-ftp 10.49.187.90
+ftp 10.49.131.252
 ```
 
 ![FTP Service](Assets/02-Ftp-Steganography/Ftp-service.png)
@@ -303,7 +303,7 @@ cat shado
 We now have a new password `M3tahuman` and we previously identified another user on the system named `slade`. We can use these credentials to SSH into the target.
 
 ```bash
-ssh slade@10.49.187.90
+ssh slade@10.49.131.252
 ```
 
 ![ssh slade](Assets/03-Privialge-Escalation/SSh-access.png)
