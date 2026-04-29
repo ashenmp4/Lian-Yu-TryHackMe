@@ -10,7 +10,7 @@ We start by enumerating the target to discover running services and open ports.
 nmap -sC -sV 10.49.131.252
 ```
 
-![Nmap Scan Result](Assets/01-Reconnaissance-Enumeration/Nmap-scanning.png)
+![Nmap Scan Result](Assets/01-Reconnaissance-Enumeration/Nmap-Scanning.png)
 
 **Nmap Results:**
 
